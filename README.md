@@ -22,7 +22,6 @@ python monte_carlo.py --mode accumulation --years 30
 ---
 
 ## Task 01 — Portfolio Risk Calculator
-## Task 01 — Portfolio Risk Calculator
 
 **File:** `portfolio_risk.py`
 
@@ -53,7 +52,6 @@ Moderate crash scenario (50% of expected crash magnitude) shown side by side wit
 ---
 
 ## Task 02 — Live Market Data Fetch
-## Task 02 — Live Market Data Fetch
 
 **File:** `market_data.py`
 
@@ -83,7 +81,6 @@ A few specifics:
 
 ---
 
-## Task 03 — AI-Powered Portfolio Explainer
 ## Task 03 — AI-Powered Portfolio Explainer
 
 **File:** `portfolio_explainer.py`
@@ -170,7 +167,6 @@ The critic's output schema includes `verdict_correct: true|false` — a boolean 
 
 ---
 
-## Task 04 — The Open Problem
 ## Task 04 — The Open Problem
 
 **File:** `monte_carlo.py`
