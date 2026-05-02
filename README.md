@@ -22,6 +22,7 @@ python monte_carlo.py --mode accumulation --years 30
 ---
 
 ## Task 01 — Portfolio Risk Calculator
+## Task 01 — Portfolio Risk Calculator
 
 **File:** `portfolio_risk.py`
 
@@ -51,6 +52,7 @@ Moderate crash scenario (50% of expected crash magnitude) shown side by side wit
 
 ---
 
+## Task 02 — Live Market Data Fetch
 ## Task 02 — Live Market Data Fetch
 
 **File:** `market_data.py`
@@ -82,6 +84,7 @@ A few specifics:
 ---
 
 ## Task 03 — AI-Powered Portfolio Explainer
+## Task 03 — AI-Powered Portfolio Explainer
 
 **File:** `portfolio_explainer.py`
 
@@ -93,6 +96,15 @@ Calls Gemini twice for any portfolio dictionary:
 2. **Critic call** — independently critiques the first explanation for factual accuracy and missing risks
 
 Both the raw API response and the parsed structured output are printed separately, as required.
+
+### Dynamic Data Input & Interaction
+The script is not limited to just a hardcoded example but supports dynamic data ingestion:
+
+* **Interactive Mode**: If run without flags, the script enters an interactive menu, prompting you to choose between the hardcoded 1 Crore INR example or a custom JSON file.
+* **CLI File Ingestion**: Supports direct ingestion of any portfolio via the `--file` flag, bypassing the interactive menu for automated workflows:
+  `python portfolio_explainer.py --file "path/to/your_portfolio.json"`
+* **Path Flexibility**: Handles both relative and absolute file paths, including support for directory names containing spaces when wrapped in quotes.
+* **Pre-flight Validation**: Automatically validates the JSON structure (checking for required keys like `total_value_inr` and `assets`) before initiating the Gemini API call.
 
 ### LLM used
 
@@ -159,6 +171,7 @@ The critic's output schema includes `verdict_correct: true|false` — a boolean 
 ---
 
 ## Task 04 — The Open Problem
+## Task 04 — The Open Problem
 
 **File:** `monte_carlo.py`
 
@@ -200,6 +213,7 @@ This is a gap that exists in Indian wealth tools specifically, and it's directly
 ---
 
 ### AI Collaboration & Acknowledgments
+These tasks were done using an AI-Augmented Engineering workflow. It helped in accelerating development and refining the user experience:
 These tasks were done using an AI-Augmented Engineering workflow. It helped in accelerating development and refining the user experience:
 
 Anthropic Claude: Assisted with logic refactoring, structural organization of the Monte Carlo simulation (Task 4), and drafting high-fidelity documentation.

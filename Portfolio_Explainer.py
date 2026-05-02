@@ -158,70 +158,63 @@ _TONE_INSTRUCTIONS: dict[Tone, str] = {
 
 
 def build_explainer_prompt(portfolio: dict[str, Any], tone: Tone) -> str:
-    """
-    Construct the primary explainer prompt sent to Gemini.
-
-    The prompt instructs the model to return ONLY valid JSON —
-    no markdown fences, no preamble — for reliable parsing.
-    """
     tone_instruction = _TONE_INSTRUCTIONS[tone]
-    portfolio_text   = _portfolio_summary_text(portfolio)
+    portfolio_text = _portfolio_summary_text(portfolio)
 
     return textwrap.dedent(f"""
-        You are a friendly but honest financial advisor reviewing a client's investment portfolio.
-        Your goal is to give an accurate, actionable, and easy-to-understand risk assessment.
+        You are a top-tier financial advisor. Analyze this portfolio and provide a risk assessment.
+
+        PORTFOLIO DATA:
+        {portfolio_text}
 
         TONE INSTRUCTION:
         {tone_instruction}
 
-        PORTFOLIO DATA:
-        {portfolio_text}
-
         TASK:
-        Analyse the portfolio and respond with ONLY a valid JSON object — no markdown, no code fences,
-        no extra text before or after. The JSON must have exactly these four keys:
+        Respond with ONLY a valid JSON object. 
+        Perform a mental 'step-by-step' analysis of the total downside in a severe crash and the 
+        investor's monthly expense runway before writing the summary.
 
+        JSON SCHEMA:
         {{
-          "summary": "<3-4 sentence plain-English description of the overall risk level and what that means for this investor>",
-          "doing_well": "<one specific strength of this portfolio>",
-          "consider_changing": "<one specific, actionable improvement, with a brief reason why>",
-          "verdict": "<exactly one of: Aggressive | Balanced | Conservative>"
+          "internal_analysis": "A brief internal note on the total INR loss in a crash and the expense runway (not shown to client)",
+          "summary": "3-4 sentence risk description. Weave in the 'Runway' (how many months they survive) and total potential loss naturally.",
+          "doing_well": "One specific strength of their diversification or cash position.",
+          "consider_changing": "One specific, actionable move to improve their risk-adjusted returns.",
+          "verdict": "Exactly one of: Aggressive | Balanced | Conservative"
         }}
 
-        Rules:
-        - "verdict" must be exactly one of the three words above, nothing else.
-        - Do not mention specific numbers from my data verbatim in a robotic way — weave them in naturally.
-        - Be honest even if the portfolio is risky; do not sugarcoat.
-        - Respond in ONLY JSON. No other text.
+        RULES:
+        - Identify the asset with the highest 'Risk Weight' (Allocation % x Crash %).
+        - Do not just say 'Bitcoin is risky'; quantify its impact on their specific Crore-value.
+        - Ensure the 'summary' feels human, not like a template.
     """).strip()
 
 
 def build_critic_prompt(portfolio: dict[str, Any], first_explanation: str) -> str:
-    """
-    Construct the second-call prompt that critiques the first explanation
-    for factual accuracy, missing risks, and unhelpful advice.
-    """
     portfolio_text = _portfolio_summary_text(portfolio)
 
     return textwrap.dedent(f"""
-        Analyze this advisor's explanation for factual errors and missing risks.
+        You are a Chief Risk Officer reviewing a junior's work. Be pedantic and rigorous.
         
         PORTFOLIO DATA:
         {portfolio_text}
 
-        ADVISOR EXPLANATION:
+        JUNIOR'S EXPLANATION:
         {first_explanation}
 
-        Return ONLY a JSON object with this exact schema:
+        CRITIQUE TASK:
+        Verify every claim against the math. Respond with ONLY JSON.
+        
+        JSON SCHEMA:
         {{
           "overall_accuracy": "Poor | Fair | Good | Excellent",
-          "factual_issues": ["list of strings"],
-          "missing_risks": ["list of strings"],
+          "math_contradictions": ["List any time the advisor miscalculated or ignored an asset's weight"],
+          "missing_risks": ["List risks the advisor ignored, e.g., concentration or lack of runway"],
+          "tone_check": "Does the language match the requested level (Beginner/Expert)?",
           "verdict_correct": true,
-          "critique_summary": "1-2 short sentences"
+          "critique_summary": "Short 1-2 sentence feedback for the junior."
         }}
-
-        Respond in ONLY JSON. No other text.
     """).strip()
 
 
